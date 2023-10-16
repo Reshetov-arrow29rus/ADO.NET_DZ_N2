@@ -5,8 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ADO.NET_DZ_N2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Warehouse" Height="570" Width="800">
+    <Canvas>
+        <Button x:Name="Show" Content="Show" Canvas.Left="10" Canvas.Top="425" Height="85" Width="220" Click="Show_Button_Click"/>
+        <Button x:Name="Add_a_position" Content="Add a position" Canvas.Left="280" Canvas.Top="425" Height="85" Width="220" Click="Add_a_position_Button_Click"/>
+        <Button x:Name="Search" Content="Search" Canvas.Left="548" Canvas.Top="425" Width="220" Height="85" Click="Search_Button_Click"/>
+
+        <Canvas Height="420" Width="780">
+            <DataGrid x:Name="dataGrid" AutoGenerateColumns="False"  Canvas.Left="10" Canvas.Top="10" Height="400" Width="760" FontSize="16">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="0.5*" Header="ID" Binding="{Binding Id}"/>
+                    <DataGridTextColumn Width="1*" Header="Name" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Width="1*" Header="TypeProduct" Binding="{Binding TypeProductName}"/>
+                    <DataGridTextColumn Width="1*" Header="Providers" Binding="{Binding ProviderName}"/>
+                    <DataGridTextColumn Width="0.5*" Header="Count" Binding="{Binding Count}"/>
+                    <DataGridTextColumn Width="1*" Header="Price" Binding="{Binding Price}"/>
+                    <DataGridTextColumn Width="1*" Header="DateOfDelivery" Binding="{Binding DateOfDelivery, StringFormat=\{0:dd.MM.yyyy\}}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Canvas>
+    </Canvas>
 </Window>
