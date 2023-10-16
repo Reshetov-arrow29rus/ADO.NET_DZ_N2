@@ -1,0 +1,46 @@
+Разберем по шагам каждую строчку запроса и объясним, что происходит:
+
+1. Показать товары заданной категории:
+
+SELECT P.Name
+FROM Products P
+INNER JOIN TypeProducts TP ON P.TypeProductID = TP.Id
+WHERE TP.Name = @CategoryName;
+
+- SELECT P.Name: Эта часть запроса определяет, какие столбцы будут возвращены в результирующем наборе. Здесь мы выбираем столбец Name из таблицы Products и используем псевдоним P для указания источника данных.
+- FROM Products P: Здесь мы указываем таблицу Products и присваиваем ей псевдоним P, чтобы в дальнейшем можно было ссылаться на нее более удобным способом.
+- INNER JOIN TypeProducts TP ON P.TypeProductID = TP.Id: Это условие INNER JOIN, которое определяет, как объединяются таблицы. Здесь мы связываем таблицу Products с таблицей TypeProducts по столбцам TypeProductID в Products и Id в TypeProducts. Это позволяет нам объединить записи, где значения этих столбцов совпадают.
+- WHERE TP.Name = @CategoryName: С помощью условия WHERE мы фильтруем результат, чтобы выбрать только строки, где значение столбца Name в таблице TypeProducts равно заданной категории, указанной в параметре @CategoryName.
+
+2. Показать товары заданного поставщика:
+
+SELECT P.Name
+FROM Products P
+INNER JOIN Providers PR ON P.ProviderID = PR.Id
+WHERE PR.Name = @ProviderName;
+
+- Здесь используется аналогичная структура запроса, как и в предыдущем случае, за исключением таблиц и столбцов:
+  - Вместо таблицы TypeProducts мы используем таблицу Providers, присваивая ей псевдоним PR.
+  - Вместо сравнения TypeProductID = TP.Id мы сравниваем ProviderID в Products с Id в Providers.
+  - Вместо проверки значения в столбце Name таблицы TypeProducts мы проверяем значение в столбце Name таблицы Providers на соответствие заданному поставщику.
+
+3. Показать самый старый товар на складе:
+
+SELECT TOP 1 P.Name
+FROM Products P
+ORDER BY P.DateOfDelivery ASC;
+
+- SELECT TOP 1 P.Name: Запрос использует функцию TOP 1, чтобы выбрать только одну строку из результирующего набора. Здесь мы выбираем столбец Name из таблицы Products для результата.
+- FROM Products P: Указываем таблицу Products и присваиваем ей псевдоним P.
+- ORDER BY P.DateOfDelivery ASC: Устанавливаем порядок сортировки строк по возрастанию значения столбца DateOfDelivery. Таким образом, наиболее ранний (старый) товар будет первым в отсортированном списке, а TOP 1 выберет его.
+
+4. Показать среднее количество товаров по каждому типу товара:
+
+SELECT TP.Name, AVG(P.Count)
+FROM Products P
+INNER JOIN TypeProducts TP ON P.TypeProductID = TP.Id
+GROUP BY TP.Name;
+
+- SELECT TP.Name, AVG(P.Count): Здесь мы выбираем столбец Name из таблицы TypeProducts и среднее значение столбца Count из таблицы Products для результата.
+- FROM Products P INNER JOIN TypeProducts TP ON P.TypeProductID = TP.Id: Указываем таблицу Products и присваиваем ей псевдоним P. Затем с помощью INNER JOIN объединяем таблицу Products и таблицу TypeProducts на основе столбцов TypeProductID в Products и Id в TypeProducts.
+- GROUP BY TP.Name: С помощью GROUP BY группируем результат по столбцу Name в таблице TypeProducts. Это позволяет нам получить среднее значение для каждого уникального типа товара в таблице.
