@@ -55,7 +55,10 @@ namespace ADO.NET_DZ_N2
 
         private void Add_a_position_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            // Создаем второе окно и вызываем его.
+            // передаем права доступа в класс Add_a_position
+            Add_a_position add_A_Position = new Add_a_position(con);
+            add_A_Position.ShowDialog();
         }
 
         private void Search_Button_Click(object sender, RoutedEventArgs e)
