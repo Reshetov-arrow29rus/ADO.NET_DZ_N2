@@ -64,6 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="AddEditDelete.cs" />
     <Compile Include="Add_a_position.xaml.cs">
       <DependentUpon>Add_a_position.xaml</DependentUpon>
     </Compile>

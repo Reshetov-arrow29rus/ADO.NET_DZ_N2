@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -36,81 +37,70 @@ namespace ADO.NET_DZ_N2
             productTable.Columns.Add("Count", typeof(int));
             productTable.Columns.Add("Provider", typeof(string));
 
-            //try
+           // try
             //{
                 DataRow newRow = productTable.NewRow();
                 newRow["Name"] = titleTextBox.Text;
                 newRow["TypeProduct"] = typeTextBox.Text; // Сохранение названия типа
                 newRow["Price"] = Convert.ToDecimal(priceTextBox.Text);
-            /* decimal price;
-             if (decimal.TryParse(priceTextBox.Text, out price))
-                 newRow["Price"] = price;
-             else
-             {
-                 MessageBox.Show("Некорректно указана цена!");
-             }  */  
-             newRow["DateOfDelivery"] = dateTimePicker.DisplayDate;
-             newRow["Count"] = Convert.ToInt32(countTextBox.Text);
-             newRow["Provider"] = providerTextBox.Text; // Сохранение названия поставщика
+                newRow["DateOfDelivery"] = dateTimePicker.DisplayDate;
+                newRow["Count"] = Convert.ToInt32(countTextBox.Text);
+                newRow["Provider"] = providerTextBox.Text; // Сохранение названия поставщика
 
-             productTable.Rows.Add(newRow);
+                productTable.Rows.Add(newRow);
 
-             MessageBox.Show("Объект успешно добавлен в таблицу!");
+                AddEditDelete addEditDelete = new AddEditDelete(ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString);
+                addEditDelete.InsertDataFromTable(productTable);
 
-             // Очистка полей ввода в Add_a_position
-             titleTextBox.Text = string.Empty;
-             typeTextBox.Text = string.Empty;
-             priceTextBox.Text = string.Empty;
-             dateTimePicker.Text = string.Empty;
-             countTextBox.Text = string.Empty;
-             providerTextBox.Text = string.Empty;
-         //}
-        // catch (Exception ex)
-         //{
-            // MessageBox.Show("Произошла ошибка, объект не может быть добавлен: " + ex.Message);
-         //}
+                MessageBox.Show("Объект успешно добавлен в таблицу!");
 
-     }
+                // Очистка полей ввода в Add_a_position
+                titleTextBox.Text = string.Empty;
+                typeTextBox.Text = string.Empty;
+                priceTextBox.Text = string.Empty;
+                dateTimePicker.Text = string.Empty;
+                countTextBox.Text = string.Empty;
+                providerTextBox.Text = string.Empty;
+           // }
+           // catch (Exception ex)
+           // {
+            //    MessageBox.Show("Произошла ошибка, объект не может быть добавлен: " + ex.Message);
+            //}
 
-     private void Exit_Button_Click(object sender, RoutedEventArgs e)
-     {
-         this.Close();
-     }
+        }
 
-     private void TextChanged(object sender, TextChangedEventArgs e)
-     {
-        /*
-         // Проверяем пустые ли значения в TextBox
-         if (string.IsNullOrEmpty(titleTextBox.Text) || string.IsNullOrEmpty(typeTextBox.Text) ||
-             string.IsNullOrEmpty(priceTextBox.Text) || dateTimePicker.Text != null ||
-             string.IsNullOrEmpty(countTextBox.Text) || string.IsNullOrEmpty(providerTextBox.Text))
-         {
-             // Если хотя бы одно значение пустое, делаем кнопку добавления некликабельной
-             AddButton.IsEnabled = false;
-         }
-         else
-         {
-             // Проверяем корректность данных в TextBox, где это необходимо
-             int value;
-             decimal price;
+        private void Exit_Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
 
-              if (decimal.TryParse(priceTextBox.Text, out price))
-              {
-                 // Если все значения заполнены и корректны, делаем кнопку добавления кликабельной
-                 AddButton.IsEnabled = true;
-              }
-             if (int.TryParse(countTextBox.Text, out value))
-             {
-                 // Если все значения заполнены и корректны, делаем кнопку добавления кликабельной
-                 AddButton.IsEnabled = true;
-             }
-             else
-             {
-                 // Если значение некорректное, делаем кнопку добавления некликабельной
-                 AddButton.IsEnabled = false;
-             }
-         }*/
+        private void TextChanged(object sender, TextChangedEventArgs e)
+        {
 
+            // Проверяем пустые ли значения в TextBox
+            if (string.IsNullOrEmpty(titleTextBox.Text) || string.IsNullOrEmpty(typeTextBox.Text) ||
+                string.IsNullOrEmpty(priceTextBox.Text) || dateTimePicker.SelectedDate == null ||
+                string.IsNullOrEmpty(countTextBox.Text) || string.IsNullOrEmpty(providerTextBox.Text))
+            {
+                // Если хотя бы одно значение пустое, делаем кнопку добавления некликабельной
+                AddButton.IsEnabled = false;
+            }
+            else
+            {
+                // Проверяем корректность данных в TextBox, где это необходимо
+                int value;
+                decimal price;
+                if (decimal.TryParse(priceTextBox.Text, out price) && int.TryParse(countTextBox.Text, out value))
+                {
+                    // Если все значения заполнены и корректны, делаем кнопку добавления кликабельной
+                    AddButton.IsEnabled = true;
+                }
+                else
+                {
+                    // Если значение некорректное, делаем кнопку добавления некликабельной
+                    AddButton.IsEnabled = false;
+                }
+            }
         }
     }
 }
