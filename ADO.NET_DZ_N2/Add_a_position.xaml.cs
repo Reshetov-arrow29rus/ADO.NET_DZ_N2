@@ -37,8 +37,8 @@ namespace ADO.NET_DZ_N2
             productTable.Columns.Add("Count", typeof(int));
             productTable.Columns.Add("Provider", typeof(string));
 
-           // try
-            //{
+            try
+            {
                 DataRow newRow = productTable.NewRow();
                 newRow["Name"] = titleTextBox.Text;
                 newRow["TypeProduct"] = typeTextBox.Text; // Сохранение названия типа
@@ -61,11 +61,11 @@ namespace ADO.NET_DZ_N2
                 dateTimePicker.Text = string.Empty;
                 countTextBox.Text = string.Empty;
                 providerTextBox.Text = string.Empty;
-           // }
-           // catch (Exception ex)
-           // {
-            //    MessageBox.Show("Произошла ошибка, объект не может быть добавлен: " + ex.Message);
-            //}
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Произошла ошибка, объект не может быть добавлен: " + ex.Message);
+            }
 
         }
 
