@@ -65,5 +65,40 @@ namespace ADO.NET_DZ_N2
         {
 
         }
+
+        private void Edit_Button_Click(object sender, RoutedEventArgs e)
+        {
+            //Сохряняем выделенную строку
+            DataRowView selectedRow = (DataRowView)dataGrid.SelectedItem;
+
+            // Создаем второе окно и вызываем его.
+            // передаем права доступа в класс Add_a_position
+            Edit_a_position edit_a_Position = new Edit_a_position(con, selectedRow);
+            edit_a_Position.ShowDialog();
+        }
+
+        private void Delete_Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Получение выбранных строк
+            var selectedItems = dataGrid.SelectedItems;
+
+            // Проверка, что выбрана хотя бы одна строка
+            if (selectedItems.Count == 1)
+            {
+                // Включение кнопки "EditButton"
+                EditButton.IsEnabled = true;
+            }
+            else
+            {
+                // Отключение кнопки "EditButton"
+                EditButton.IsEnabled = false;
+            }
+
+        }
     }
 }

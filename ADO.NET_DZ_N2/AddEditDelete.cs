@@ -60,5 +60,12 @@ namespace ADO.NET_DZ_N2
                 }
             }
         }
+
+        //Методы для редактирования товара в таблице базы данных
+        public void UpdateDataInTable(DataTable productTable)
+        {
+
+        }
+
     }
 }
