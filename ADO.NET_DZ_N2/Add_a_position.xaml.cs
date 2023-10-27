@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ADO.NET_DZ_N2
 {
@@ -43,7 +44,7 @@ namespace ADO.NET_DZ_N2
                 newRow["Name"] = titleTextBox.Text;
                 newRow["TypeProduct"] = typeTextBox.Text; // Сохранение названия типа
                 newRow["Price"] = Convert.ToDecimal(priceTextBox.Text);
-                newRow["DateOfDelivery"] = dateTimePicker.DisplayDate;
+                newRow["DateOfDelivery"] = dateTimePicker.Text;
                 newRow["Count"] = Convert.ToInt32(countTextBox.Text);
                 newRow["Provider"] = providerTextBox.Text; // Сохранение названия поставщика
 

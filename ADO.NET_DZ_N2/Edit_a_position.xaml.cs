@@ -51,13 +51,13 @@ namespace ADO.NET_DZ_N2
             updateTable.Columns.Add("Count", typeof(int));
             updateTable.Columns.Add("Provider", typeof(string));
 
-            try
-            {
+           // try
+           // {
                 DataRow newRow = updateTable.NewRow();
                 newRow["Name"] = titleTextBox.Text;
                 newRow["TypeProduct"] = typeTextBox.Text; // Сохранение названия типа
                 newRow["Price"] = Convert.ToDecimal(priceTextBox.Text);
-                newRow["DateOfDelivery"] = dateTimePicker.DisplayDate;
+                newRow["DateOfDelivery"] = dateTimePicker.Text;
                 newRow["Count"] = Convert.ToInt32(countTextBox.Text);
                 newRow["Provider"] = providerTextBox.Text; // Сохранение названия поставщика
 
@@ -69,11 +69,11 @@ namespace ADO.NET_DZ_N2
                 MessageBox.Show("Объект в таблице успешно обновлен!");
 
                 this.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Произошла ошибка, объект не может быть обновлен: " + ex.Message);
-            }
+           // }
+           // catch (Exception ex)
+           // {
+            //    MessageBox.Show("Произошла ошибка, объект не может быть обновлен: " + ex.Message);
+           // }
         }
 
         private void Exit_Button_Click(object sender, RoutedEventArgs e)
