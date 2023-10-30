@@ -63,7 +63,7 @@ namespace ADO.NET_DZ_N2
 
         private void Search_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            MessageBox.Show("В разработке!");
         }
 
         private void Edit_Button_Click(object sender, RoutedEventArgs e)
@@ -79,7 +79,22 @@ namespace ADO.NET_DZ_N2
 
         private void Delete_Button_Click(object sender, RoutedEventArgs e)
         {
+            //Сохряняем выделенную строку
+            DataRowView selectedRow = (DataRowView)dataGrid.SelectedItem;
+            // Получаем Id товара для удаления его из таблиц
+            int productID = (int)selectedRow["Id"];
 
+            try
+            { 
+                AddEditDelete addEditDelete = new AddEditDelete(ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString);
+                addEditDelete.DeleteRowTable(productID);
+
+                MessageBox.Show("Данный товар и вся информация о нем успешно удалены!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Удаление не возможно!" + ex.Message);
+            }
         }
 
         private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -90,13 +105,15 @@ namespace ADO.NET_DZ_N2
             // Проверка, что выбрана хотя бы одна строка
             if (selectedItems.Count == 1)
             {
-                // Включение кнопки "EditButton"
+                // Включение кнопки "EditButton" и "DeleteButton"
                 EditButton.IsEnabled = true;
+                DeleteButton.IsEnabled = true;
             }
             else
             {
-                // Отключение кнопки "EditButton"
+                // Отключение кнопки "EditButton" и "DeleteButton"
                 EditButton.IsEnabled = false;
+                DeleteButton.IsEnabled = false;
             }
 
         }

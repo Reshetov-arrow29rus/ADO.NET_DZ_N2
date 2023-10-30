@@ -37,7 +37,6 @@ namespace ADO.NET_DZ_N2
                     typeProductID = Convert.ToInt32(typeProductCommand.ExecuteScalar());
                 }
 
-                //string providerName = productTable.Rows[0]["Provider"].ToString();
                 using (SqlCommand providerCommand = new SqlCommand("INSERT INTO Providers (Name) VALUES (@Name); SELECT SCOPE_IDENTITY()", connection))
                 {
                     providerCommand.Parameters.AddWithValue("@Name", productTable.Rows[0]["Provider"].ToString());
@@ -61,6 +60,7 @@ namespace ADO.NET_DZ_N2
                 }
             }
         }
+
 
         //Методы для редактирования товара в таблице базы данных
         public void UpdateDataInTable(DataTable productTable, int productID)
@@ -136,21 +136,114 @@ namespace ADO.NET_DZ_N2
             }
         }
 
+
         //Методы для удаления товара из таблиц базы данных
+        public void DeleteRowTable(int productID)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                //Создание объекта SqlDataAdapter с SQL - запросом и параметром
+                using (SqlDataAdapter adapter = new SqlDataAdapter(ConfigurationManager.AppSettings["QueryProductId"], connection))
+                {
+                    adapter.SelectCommand.Parameters.AddWithValue("@ProductId", productID);
+
+                    // Создание объекта DataTable
+                    DataTable dataTable = new DataTable();
+
+                    // Заполнение DataTable данными из базы данных
+                    adapter.Fill(dataTable);
+
+                    // Получение значений TypeProductID и ProviderID из первой строки
+                    int typeProductID = (int)dataTable.Rows[0]["TypeProductID"];
+                    int providerID = (int)dataTable.Rows[0]["ProviderID"];
+                }
+
+                // Удаление  строки в таблице "Products"
+                using (SqlDataAdapter adapter = new SqlDataAdapter())
+                {
+                    DataTable virtualProductsTable = CreateVirtualTable("Products", connection);
+
+                    //Удаление строки по идентификатору в виртуальной таблице "Products"
+                    DataRow[] virtualProductsRows = virtualProductsTable.Select("Id = " + productID);
+                    foreach (DataRow row in virtualProductsRows)
+                    {
+                        row.Delete();
+                    }
+                    // Установка команд удаления для каждой виртуальной таблицы
+                    adapter.DeleteCommand = new SqlCommand("DELETE FROM Products WHERE Id = @Id", connection);
+                    adapter.DeleteCommand.Parameters.AddWithValue("@Id", productID);
+
+                    // Исполняем удаление и обновление в базе данных
+                    adapter.Update(virtualProductsTable);
+                }
+
+                // Удаление  строки в таблице "TypeProduct"
+                using (SqlDataAdapter adapter = new SqlDataAdapter())
+                {
+                    DataTable typeProductlTable = CreateVirtualTable("TypeProduct", connection);
+
+                    //Удаление строки по идентификатору в виртуальной таблице "TypeProduct"
+                    DataRow[] typeProductRows = typeProductlTable.Select("Id = " + typeProductID);
+                    foreach (DataRow row in typeProductRows)
+                    {
+                        row.Delete();
+                    }
+                    // Установка команд удаления для каждой виртуальной таблицы
+                    adapter.DeleteCommand = new SqlCommand("DELETE FROM TypeProduct WHERE Id = @Id", connection);
+                    adapter.DeleteCommand.Parameters.AddWithValue("@Id", typeProductID);
+
+                    // Исполняем удаление и обновление в базе данных
+                    adapter.Update(typeProductlTable);
+                }
+
+                // Удаление  строки в таблице "Providers"
+                using (SqlDataAdapter adapter = new SqlDataAdapter())
+                {
+                    DataTable providersTable = CreateVirtualTable("Providers", connection);
+
+                    //Удаление строки по идентификатору в виртуальной таблице "Providers"
+                    DataRow[] providersRows = providersTable.Select("Id = " + providerID);
+                    foreach (DataRow row in providersRows)
+                    {
+                        row.Delete();
+                    }
+                    // Установка команд удаления для каждой виртуальной таблицы
+                    adapter.DeleteCommand = new SqlCommand("DELETE FROM Providers WHERE Id = @Id", connection);
+                    adapter.DeleteCommand.Parameters.AddWithValue("@Id", providerID);
+
+                    // Исполняем удаление и обновление в базе данных
+                    adapter.Update(providersTable);
+                }
+
+            }
+        }
 
 
-
-        //Создание виртуальных таблиц схожей сигнатурой
+        //Перегруженный метод Создание виртуальных таблиц схожей сигнатурой
         public DataTable CreateVirtualTable(string tableName, int Id, SqlConnection connection)
         {
             DataTable virtualTable = new DataTable(tableName);
 
             using (SqlDataAdapter adapter = new SqlDataAdapter())
             {
-                adapter.SelectCommand = new SqlCommand("SELECT * FROM " + tableName + " WHERE Id = " +Id, connection); // Получение строки которую изменяем
-                adapter.Fill(virtualTable); // Заполнение виртуальной таблицы строки которую изменяем
+                adapter.SelectCommand = new SqlCommand("SELECT * FROM " + tableName + " WHERE Id = @Id", connection);// Получение строки которую изменяем или удаляем
+                adapter.SelectCommand.Parameters.AddWithValue("@Id", Id); 
+                adapter.Fill(virtualTable); // Заполнение виртуальной таблицы строки которую изменяем или удаляем
             }
             return virtualTable;
         }
+        //Перегруженный метод 
+        public DataTable CreateVirtualTable(string tableName, SqlConnection connection)
+        {
+            DataTable virtualTable = new DataTable(tableName);
+
+            using (SqlDataAdapter adapter = new SqlDataAdapter())
+            {
+                adapter.SelectCommand = new SqlCommand("SELECT * FROM " + tableName, connection);// Получение строки которую изменяем или удаляем
+                adapter.Fill(virtualTable); // Заполнение виртуальной таблицы строки которую изменяем или удаляем
+            }
+            return virtualTable;
+        }
+
     }
 }
